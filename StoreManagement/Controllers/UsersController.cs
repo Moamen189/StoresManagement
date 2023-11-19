@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace StoreManagement.Controllers
 {
@@ -9,42 +10,54 @@ namespace StoreManagement.Controllers
     {
         private static List<string> _users = new List<string>() { "Ali", "Qdri", "Fouad", "Saad" };
         [HttpGet]
-        public List<string> GetUsers()
+        public IActionResult GetUsers()
         {
-            return _users;
+            if(_users.Count > 0)
+            {
+
+            return Ok(_users);
+            }
+            return NoContent();
         }
 
         [HttpGet("{id}")]
-        public string GetUsers(int id)
+        public IActionResult GetUsers(int id)
         {
             if (id >= 0 && id < _users.Count)
             {
 
-                return _users[id];
+                return Ok(_users[id]);
             }
-            return "";
+            return NotFound();
         }
 
         [HttpPost]
 
-        public void AddUsers(string userName)
+        public IActionResult AddUsers(string userName)
         {
 
             _users.Add(userName);
+            return Ok();
         }
 
         [HttpPut("{id}")]
 
-        public void UpdateUser(int id, string userName)
+        public IActionResult UpdateUser(int id, string userName)
         {
-            if(id >= 0 && id < _users.Count) { _users[id] = userName; }
+            if(id >= 0 && id < _users.Count) { 
+                _users[id] = userName; 
+            
+            }
+            return Ok();
+
         }
 
         [HttpDelete("{id}")]
 
-        public void DeleteUser(int id)
+        public IActionResult DeleteUser(int id)
         {
             if (id >= 0 && id < _users.Count) { _users.RemoveAt(id); }
+            return NoContent();
         }
     }
 }
