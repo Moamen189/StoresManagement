@@ -30,6 +30,30 @@ namespace StoreManagement.Controllers
             }
 
         };
+        [HttpGet("{info}")]
+        public IActionResult GetInfo(int? id , string? name , int? page)
+        {
+            if(id != null || name != null || page != null)
+            {
+                var response = new
+                {
+                    id = id,
+                    name = name,
+                    page = page,
+                    ErrorMessage = "The search Functionality not supported yet"
+                };
+                return Ok(response);
+            }
+            List<string> listInfo = new List<string>()
+            {
+                "Info 1",
+                "Info 2",
+                "Info 3",
+                "Info 4",
+
+            };
+            return Ok(listInfo);
+        }
         [HttpGet]
         public IActionResult GetUsers()
         {
