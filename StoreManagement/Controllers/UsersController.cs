@@ -41,7 +41,7 @@ namespace StoreManagement.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetUsers(int id)
         {
             if (id >= 0 && id < _users.Count)
@@ -64,6 +64,18 @@ namespace StoreManagement.Controllers
 
             _users.Add(user);
             return Ok();
+        }
+
+        [HttpGet("{name:string}")]
+
+        public IActionResult GetUser(string name)
+        {
+            var user =  _users.FirstOrDefault(u => u.FirstName.Contains(name) || u.LastName.Contains(name));
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
         }
 
         [HttpPut("{id}")]
