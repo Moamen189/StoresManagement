@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.Filters;
 using StoreManagement.Models;
 using StoreManagement.Services;
 using System.Reflection.Metadata.Ecma335;
@@ -33,6 +34,7 @@ namespace StoreManagement.Controllers
         };
 
         [HttpGet("{info}")]
+        [DebugFilter]
         public IActionResult GetInfo(int? id , string? name , int? page , [FromServices] IConfiguration configuration , [FromServices] TimeService timeService)
         {
             if(id != null || name != null || page != null)
