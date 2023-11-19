@@ -1,4 +1,6 @@
 
+using StoreManagement.Services;
+
 namespace StoreManagement
 {
     public class Program
@@ -7,7 +9,7 @@ namespace StoreManagement
         {
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
-
+            builder.Services.AddScoped<TimeService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

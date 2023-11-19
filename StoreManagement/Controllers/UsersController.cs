@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Models;
+using StoreManagement.Services;
 using System.Reflection.Metadata.Ecma335;
 
 namespace StoreManagement.Controllers
@@ -9,13 +10,6 @@ namespace StoreManagement.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-
-
-        public UsersController(IConfiguration configuration)
-        {
-
-
-        }
         private static List<UserDto> _users = new List<UserDto>() { 
         
             new UserDto()
@@ -39,7 +33,7 @@ namespace StoreManagement.Controllers
         };
 
         [HttpGet("{info}")]
-        public IActionResult GetInfo(int? id , string? name , int? page , [FromServices] IConfiguration configuration)
+        public IActionResult GetInfo(int? id , string? name , int? page , [FromServices] IConfiguration configuration , [FromServices] TimeService timeService)
         {
             if(id != null || name != null || page != null)
             {
@@ -57,6 +51,8 @@ namespace StoreManagement.Controllers
             listInfo.Add("Language=" + configuration["Language"]);
             listInfo.Add("Country=" + configuration["Country"]);
             listInfo.Add("log=" + configuration["Logging:LogLevel:Default"]);
+            listInfo.Add("Date=" + timeService.GetDate());
+            listInfo.Add("Time=" + timeService.GetTime());
             return Ok(listInfo);
         }
         [HttpGet]
