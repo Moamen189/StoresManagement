@@ -23,7 +23,16 @@ namespace StoreManagement
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.Use((context, next) =>
+            {
+                DateTime requestTime = DateTime.Now;
+                var result = next(context);
+                DateTime responseTime = DateTime.Now;
+                TimeSpan processTime = requestTime - requestTime;
+                Console.WriteLine("Process Duration=" + processTime.TotalMicroseconds + "ms" )
 
+                return result;
+            });
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
