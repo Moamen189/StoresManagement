@@ -1,4 +1,5 @@
 
+using StoreManagement.Middleware;
 using StoreManagement.Services;
 
 namespace StoreManagement
@@ -23,16 +24,17 @@ namespace StoreManagement
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.Use((context, next) =>
-            {
-                DateTime requestTime = DateTime.Now;
-                var result = next(context);
-                DateTime responseTime = DateTime.Now;
-                TimeSpan processTime = requestTime - requestTime;
-                Console.WriteLine("Process Duration=" + processTime.TotalMicroseconds + "ms" )
+            //app.Use((context, next) =>
+            //{
+            //    DateTime requestTime = DateTime.Now;
+            //    var result = next(context);
+            //    DateTime responseTime = DateTime.Now;
+            //    TimeSpan processTime = requestTime - requestTime;
+            //    Console.WriteLine("Process Duration=" + processTime.TotalMicroseconds + "ms" )
 
-                return result;
-            });
+            //    return result;
+            //});
+            app.UseMiddleware<StatusMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
