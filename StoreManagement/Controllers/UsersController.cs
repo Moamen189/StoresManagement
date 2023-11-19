@@ -15,7 +15,7 @@ namespace StoreManagement.Controllers
             {
                 FirstName = "Ali",
                 LastName = "Sayed",
-                Email = "Ali.Sayed@yahoo.com",
+                Email = "Ali@yahoo.com",
                 Phone ="01056456565",
                 Address="Nasr City"
             },
@@ -24,7 +24,7 @@ namespace StoreManagement.Controllers
             {
                 FirstName = "Fouad",
                 LastName = "Magdy",
-                Email = "Fouash.M@yahoo.com",
+                Email = "Fouash@yahoo.com",
                 Phone ="01056556985",
                 Address="Maadi City"
             }
@@ -56,6 +56,11 @@ namespace StoreManagement.Controllers
 
         public IActionResult AddUsers(UserDto user)
         {
+            if(user.Email.Equals("user@example.com "))
+            {
+                ModelState.AddModelError("Email", "this Email Address is Not Authorized");
+                return BadRequest(ModelState);
+            }
 
             _users.Add(user);
             return Ok();
@@ -65,7 +70,12 @@ namespace StoreManagement.Controllers
 
         public IActionResult UpdateUser(int id, UserDto user)
         {
-            if(id >= 0 && id < _users.Count) { 
+            if (user.Email.Equals("user@example.com "))
+            {
+                ModelState.AddModelError("Email", "this Email Address is Not Authorized");
+                return BadRequest(ModelState);
+            }
+            if (id >= 0 && id < _users.Count) { 
                 _users[id] = user; 
             
             }
