@@ -9,6 +9,13 @@ namespace StoreManagement.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+
+
+        public UsersController(IConfiguration configuration)
+        {
+
+
+        }
         private static List<UserDto> _users = new List<UserDto>() { 
         
             new UserDto()
@@ -30,8 +37,9 @@ namespace StoreManagement.Controllers
             }
 
         };
+
         [HttpGet("{info}")]
-        public IActionResult GetInfo(int? id , string? name , int? page)
+        public IActionResult GetInfo(int? id , string? name , int? page , [FromServices] IConfiguration configuration)
         {
             if(id != null || name != null || page != null)
             {
@@ -44,14 +52,11 @@ namespace StoreManagement.Controllers
                 };
                 return Ok(response);
             }
-            List<string> listInfo = new List<string>()
-            {
-                "Info 1",
-                "Info 2",
-                "Info 3",
-                "Info 4",
-
-            };
+            List<string> listInfo = new List<string>();
+            listInfo.Add("AppName=" + configuration["AppName"]);
+            listInfo.Add("Language=" + configuration["Language"]);
+            listInfo.Add("Country=" + configuration["Country"]);
+            listInfo.Add("log=" + configuration["Logging:LogLevel:Default"]);
             return Ok(listInfo);
         }
         [HttpGet]
