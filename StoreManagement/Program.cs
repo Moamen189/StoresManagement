@@ -34,7 +34,7 @@ namespace StoreManagement
 
             //    return result;
             //});
-            app.UseMiddleware<StatusMiddleware>();
+            //app.UseMiddleware<StatusMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
