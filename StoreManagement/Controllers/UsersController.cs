@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.Models;
 using System.Reflection.Metadata.Ecma335;
 
 namespace StoreManagement.Controllers
@@ -8,7 +9,27 @@ namespace StoreManagement.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private static List<string> _users = new List<string>() { "Ali", "Qdri", "Fouad", "Saad" };
+        private static List<UserDto> _users = new List<UserDto>() { 
+        
+            new UserDto()
+            {
+                FirstName = "Ali",
+                LastName = "Sayed",
+                Email = "Ali.Sayed@yahoo.com",
+                Phone ="01056456565",
+                Address="Nasr City"
+            },
+
+            new UserDto()
+            {
+                FirstName = "Fouad",
+                LastName = "Magdy",
+                Email = "Fouash.M@yahoo.com",
+                Phone ="01056556985",
+                Address="Maadi City"
+            }
+
+        };
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -33,19 +54,19 @@ namespace StoreManagement.Controllers
 
         [HttpPost]
 
-        public IActionResult AddUsers(string userName)
+        public IActionResult AddUsers(UserDto user)
         {
 
-            _users.Add(userName);
+            _users.Add(user);
             return Ok();
         }
 
         [HttpPut("{id}")]
 
-        public IActionResult UpdateUser(int id, string userName)
+        public IActionResult UpdateUser(int id, UserDto user)
         {
             if(id >= 0 && id < _users.Count) { 
-                _users[id] = userName; 
+                _users[id] = user; 
             
             }
             return Ok();
