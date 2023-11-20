@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StoreManagement.Models;
 
 namespace StoreManagement.Services
 {
@@ -8,5 +9,8 @@ namespace StoreManagement.Services
         {
             
         }
+
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
