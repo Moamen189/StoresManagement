@@ -20,7 +20,7 @@ namespace StoreManagement.Middleware
             var result = _next(httpContext);
             DateTime responseTime = DateTime.Now;
             TimeSpan processTime = requestTime - requestTime;
-            Console.WriteLine("Process Duration=" + processTime.TotalMicroseconds + "ms")
+            Console.WriteLine("Process Duration=" + processTime.TotalMicroseconds + "ms");
 
             return result;
 
