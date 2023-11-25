@@ -70,9 +70,25 @@ namespace StoreManagement.Controllers
             contact.LastName = contactDto.LastName;
             contact.FirstName = contactDto.FirstName;
             contact.Email = contactDto.Email;
-            contact.Phone = contactDto.Phone;
+            contact.Phone = contactDto.Phone??"";
             contact.Message = contactDto.Message;             
             context.SaveChanges();
+            return Ok(contact);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteContact(int id)
+        {
+            var contact = context.Contacts.Find(id);
+            if (contact == null)
+            {
+                return NotFound();
+
+            }
+
+            context.Contacts.Remove(contact);
+            context.SaveChanges();
+            return Ok(contact);
         }
     }
 }
