@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.Models;
 using StoreManagement.Services;
 
 namespace StoreManagement.Controllers
@@ -36,6 +37,23 @@ namespace StoreManagement.Controllers
             return Ok(contact);
         }
 
-        //[HttpPost]
+        [HttpPost]
+
+        public IActionResult CreateContact(ContactDto contactDto)
+        {
+            Contact contact = new Contact()
+            {
+                FirstName= contactDto.FirstName,
+                LastName= contactDto.LastName,
+                Email= contactDto.Email,
+                Phone = contactDto.Phone??"",
+                Message= contactDto.Message,
+                CreatedAt = DateTime.Now
+            };
+            context.Contacts.Add(contact);
+            context.SaveChanges();
+            return Ok(contact);
+
+        }
     }
 }
