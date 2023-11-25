@@ -79,16 +79,23 @@ namespace StoreManagement.Controllers
         [HttpDelete]
         public IActionResult DeleteContact(int id)
         {
-            var contact = context.Contacts.Find(id);
-            if (contact == null)
+            //var contact = context.Contacts.Find(id);
+            //if (contact == null)
+            //{
+            //    return NotFound();
+
+            //}
+            try
+            {
+                var contact = new Contact() { Id = id };
+                context.Contacts.Remove(contact);
+                context.SaveChanges();
+            }catch(Exception)
             {
                 return NotFound();
-
             }
 
-            context.Contacts.Remove(contact);
-            context.SaveChanges();
-            return Ok(contact);
+            return Ok();
         }
     }
 }
