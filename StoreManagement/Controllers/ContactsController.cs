@@ -55,5 +55,24 @@ namespace StoreManagement.Controllers
             return Ok(contact);
 
         }
+
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateContact(int id , ContactDto contactDto)
+        {
+            var contact = context.Contacts.Find(id);
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+
+            contact.LastName = contactDto.LastName;
+            contact.FirstName = contactDto.FirstName;
+            contact.Email = contactDto.Email;
+            contact.Phone = contactDto.Phone;
+            contact.Message = contactDto.Message;             
+            context.SaveChanges();
+        }
     }
 }
