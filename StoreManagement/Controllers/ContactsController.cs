@@ -10,7 +10,10 @@ namespace StoreManagement.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-
+        private readonly List<string> Subjects = new List<string>()
+        {
+            "Order Status" , "Refund Request" , "Jop Application" , "Other"
+        };
         public ContactsController(ApplicationDbContext context)
         {
             this.context = context;
