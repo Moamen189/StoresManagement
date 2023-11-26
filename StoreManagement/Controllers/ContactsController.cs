@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Models;
 using StoreManagement.Services;
+using System.Linq;
 
 namespace StoreManagement.Controllers
 {
@@ -24,11 +25,31 @@ namespace StoreManagement.Controllers
             return Ok(Subjects);
         }
         [HttpGet]
-        public IActionResult GetContacts() { 
+        public IActionResult GetContacts(int? page) { 
+            if(page == null || page < 1)
+            {
+                page =1;
+            }
+            var pageSize = 5;
+            var totalPage = 0;
+            decimal count = context.Contacts.Count();
+            totalPage = (int)Math.Ceiling(count / pageSize);
         
-            var contacts = context.Contacts.ToList();
+            var contacts = context.Contacts
+                .Include(x=> x.Subject)
+                .OrderByDescending(c => c.Id)
+                .Skip((int)(page -1 ) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var response = new
+            {
+                Contacts = contacts,
+                TotalPage = totalPage,
+                PageSize = pageSize,
+                Page = page
+            };
 
-            return Ok(contacts);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
