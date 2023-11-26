@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StoreManagement.Models;
 using StoreManagement.Services;
 
@@ -34,7 +35,7 @@ namespace StoreManagement.Controllers
 
         public IActionResult GetContact(int id)
         {
-            var contact = context.Contacts.Find(id);
+            var contact = context.Contacts.Include(x => x.Subject).FirstOrDefault(x => x.Id == id);
             if (contact == null)
             {
                 return NotFound();
