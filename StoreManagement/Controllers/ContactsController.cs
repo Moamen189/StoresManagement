@@ -10,15 +10,18 @@ namespace StoreManagement.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private readonly List<string> Subjects = new List<string>()
-        {
-            "Order Status" , "Refund Request" , "Jop Application" , "Other"
-        };
+
         public ContactsController(ApplicationDbContext context)
         {
             this.context = context;
         }
 
+        [HttpGet("subject")]
+        public IActionResult GetSubject()
+        {
+            var Subjects = context.Subjects.ToList();
+            return Ok(Subjects);
+        }
         [HttpGet]
         public IActionResult GetContacts() { 
         
@@ -44,12 +47,19 @@ namespace StoreManagement.Controllers
 
         public IActionResult CreateContact(ContactDto contactDto)
         {
+            var Subject = context.Subjects.Find(contactDto.SubjectId);
+            if (Subject == null)
+            {
+                ModelState.AddModelError("Subject", "Please Enter A Valid Subject");
+                return BadRequest(ModelState);
+            }
             Contact contact = new Contact()
             {
                 FirstName= contactDto.FirstName,
                 LastName= contactDto.LastName,
                 Email= contactDto.Email,
                 Phone = contactDto.Phone??"",
+                Subject = Subject,
                 Message= contactDto.Message,
                 CreatedAt = DateTime.Now
             };
@@ -63,6 +73,12 @@ namespace StoreManagement.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateContact(int id , ContactDto contactDto)
         {
+            var Subject = context.Subjects.Find(contactDto.SubjectId);
+            if (Subject == null)
+            {
+                ModelState.AddModelError("Subject", "Please Enter A Valid Subject");
+                return BadRequest(ModelState);
+            }
             var contact = context.Contacts.Find(id);
             if (contact == null)
             {
@@ -73,6 +89,7 @@ namespace StoreManagement.Controllers
             contact.LastName = contactDto.LastName;
             contact.FirstName = contactDto.FirstName;
             contact.Email = contactDto.Email;
+            contact.Subject = Subject;
             contact.Phone = contactDto.Phone??"";
             contact.Message = contactDto.Message;             
             context.SaveChanges();
@@ -90,7 +107,7 @@ namespace StoreManagement.Controllers
             //}
             try
             {
-                var contact = new Contact() { Id = id };
+                var contact = new Contact() { Id = id , Subject = new Subject()};
                 context.Contacts.Remove(contact);
                 context.SaveChanges();
             }catch(Exception)

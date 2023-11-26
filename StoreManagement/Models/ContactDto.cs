@@ -16,9 +16,7 @@ namespace StoreManagement.Models
         [MaxLength(100)]
 
         public string? Phone { get; set; } = "";
-        [Required, MaxLength(100)]
-
-        public string Subject { get; set; } = "";
+        public int SubjectId { get; set; }
         [Required, MaxLength(4000) , MinLength(20)]
 
         public string Message { get; set; } = "";

@@ -14,9 +14,8 @@ namespace StoreManagement.Models
 
         public string Email { get; set; } = "";
         public string Phone { get; set; } = "";
-        [MaxLength(100)]
 
-        public string Subject { get; set; } = "";
+        public required Subject Subject { get; set; }
         public string Message { get; set; } = "";
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
