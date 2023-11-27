@@ -30,8 +30,27 @@ namespace StoreManagement.Controllers
         }
         [HttpGet]
 
-        public IActionResult GetProducts() {
-          var Products = context.Products.ToList();
+        public IActionResult GetProducts(string? search , string? category , int? maxPrice , int? minPrice) {
+            IQueryable<Product> query = context.Products;
+            if(search != null)
+            {
+                query = query.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+            }
+            if (category != null)
+            {
+                query = query.Where(p => p.Category == category);
+            }
+            if(minPrice != null)
+            {
+                query = query.Where(p => p.Price >= minPrice);
+            }
+            if (maxPrice != null)
+            {
+                query = query.Where(p => p.Price <= maxPrice);
+            }
+            var Products = query.ToList();
+
+
             return Ok(Products);
         
         }
