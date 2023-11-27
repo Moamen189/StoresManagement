@@ -12,12 +12,22 @@ namespace StoreManagement.Controllers
         private readonly ApplicationDbContext context;
         private readonly IWebHostEnvironment env;
 
+        private readonly List<string> productsList = new List<string>()
+        {
+            "Phones" , "Computers" , "Printers" , "Accessiores" , "Cameras" , "Other"
+        };
+
         public ProductsController(ApplicationDbContext applicationDbContext , IWebHostEnvironment env)
         {
             this.context = applicationDbContext;
             this.env = env;
         }
+        [HttpGet("{categories}")]
 
+        public IActionResult GetCategory()
+        {
+            return Ok(productsList);
+        }
         [HttpGet]
 
         public IActionResult GetProducts() {
@@ -43,7 +53,14 @@ namespace StoreManagement.Controllers
 
         public IActionResult CreateProduct([FromForm]ProductDto productDto)
         {
-            if(productDto.ImageFileName == null) {
+            if (!productsList.Contains(productDto.Category))
+            {
+
+                ModelState.AddModelError("Category", "Please Select a valid Category");
+                return BadRequest(ModelState);
+
+            }
+            if (productDto.ImageFileName == null) {
 
                 ModelState.AddModelError("Image File", "the Image File Name is Required");
                 return BadRequest(ModelState);
@@ -78,6 +95,14 @@ namespace StoreManagement.Controllers
 
         public IActionResult UpdateProduct(int id,[FromForm]ProductDto productDto) {
 
+            if (!productsList.Contains(productDto.Category))
+            {
+
+                ModelState.AddModelError("Category", "Please Select a valid Category");
+                return BadRequest(ModelState);
+
+            }
+
             var Product = context.Products.Find(id);
             if (Product == null)
             {
@@ -104,6 +129,24 @@ namespace StoreManagement.Controllers
             Product.ImageFileName = productImageFileName;
             context.SaveChanges();
             return Ok(Product);
+        }
+
+
+        [HttpDelete("{id}")]
+
+        public IActionResult DeleteProduct(int id)
+        {
+            var product = context.Products.Find(id);
+            if (product == null) { 
+                return NotFound();
+            }
+
+            var imageFolder = env.WebRootPath + "/Images/Products/";
+            System.IO.File.Delete(imageFolder + product.ImageFileName);
+            context.Products.Remove(product);
+            context.SaveChanges();
+            return Ok();
+
         }
     }
 }
