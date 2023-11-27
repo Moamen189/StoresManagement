@@ -73,5 +73,37 @@ namespace StoreManagement.Controllers
             context.SaveChanges();
             return Ok(product);
         }
+
+        [HttpPut("{id}")]
+
+        public IActionResult UpdateProduct(int id,[FromForm]ProductDto productDto) {
+
+            var Product = context.Products.Find(id);
+            if (Product == null)
+            {
+                return NotFound();
+            }
+            string productImageFileName = Product.ImageFileName;
+            if(productDto.ImageFileName != null)
+            {
+                string ImageFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                ImageFileName += Path.GetExtension(productDto.ImageFileName.FileName);
+                string ImageFolder = env.WebRootPath + "/Images/Products/";
+                using (var stream = System.IO.File.Create(ImageFolder + ImageFileName))
+                {
+                    productDto.ImageFileName.CopyTo(stream);
+                }
+
+                System.IO.File.Delete(ImageFolder + Product.ImageFileName);
+            }
+            Product.Name = productDto.Name;
+            Product.Brand = productDto.Brand;
+            Product.Category = productDto.Category;
+            Product.Price = productDto.Price;
+            Product.Description = productDto.Description ?? "";
+            Product.ImageFileName = productImageFileName;
+            context.SaveChanges();
+            return Ok(Product);
+        }
     }
 }
