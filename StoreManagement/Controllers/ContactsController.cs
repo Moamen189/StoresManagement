@@ -18,12 +18,12 @@ namespace StoreManagement.Controllers
             this.context = context;
         }
 
-        [HttpGet("subject")]
-        public IActionResult GetSubject()
-        {
-            var Subjects = context.Subjects.ToList();
-            return Ok(Subjects);
-        }
+        //[HttpGet("{subject}")]
+        //public IActionResult GetSubject()
+        //{
+        //    var Subjects = context.Subjects.ToList();
+        //    return Ok(Subjects);
+        //}
         [HttpGet]
         public IActionResult GetContacts(int? page) { 
             if(page == null || page < 1)
