@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Models;
 using StoreManagement.Services;
+using System.Globalization;
+using System.Linq;
 
 namespace StoreManagement.Controllers
 {
@@ -30,7 +32,7 @@ namespace StoreManagement.Controllers
         }
         [HttpGet]
 
-        public IActionResult GetProducts(string? search , string? category , int? maxPrice , int? minPrice , string? sort , string? order) {
+        public IActionResult GetProducts(string? search , string? category , int? maxPrice , int? minPrice , string? sort , string? order, int? page) {
             IQueryable<Product> query = context.Products;
             if(search != null)
             {
@@ -120,11 +122,28 @@ namespace StoreManagement.Controllers
 
                 }
             }
-            var Products = query.ToList();
+            if(page == null || page > 1)
+            {
+                page = 1;
+            }
+            decimal count = query.Count();
+            var pageSize = 5;
+            var totalPages = 0;
+            totalPages = (int)Math.Ceiling(count / pageSize);
+            query = query.Skip((int)(page - 1) * pageSize).Take(pageSize);
+            var products = query.ToList();
 
 
-            return Ok(Products);
-        
+            var response = new
+            {
+                Products = products,
+                TotalPage = totalPages,
+                PageSize = pageSize,
+                Page = page
+            };
+
+            return Ok(response);
+
         }
 
         [HttpGet("{id}")]
