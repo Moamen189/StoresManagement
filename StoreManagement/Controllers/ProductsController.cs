@@ -122,7 +122,7 @@ namespace StoreManagement.Controllers
 
                 }
             }
-            if(page == null || page > 1)
+            if(page == null || page < 1)
             {
                 page = 1;
             }
