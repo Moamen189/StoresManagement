@@ -18,16 +18,6 @@ namespace StoreManagement.Controllers
         {
             this.configuration = configuration;
         }
-
-        //[HttpGet("testToken")]
-
-        //public IActionResult TestToken()
-        //{
-        //    User user = new User { Id = 2, Role = "admin" };
-        //    string jwt = CreateJwtToken(user);
-        //    var response = new {JwtToken =  jwt};
-        //    return Ok(response);
-        //}
         private string CreateJwtToken(User user)
         {
             List<Claim> claims = new List<Claim>()
