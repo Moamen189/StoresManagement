@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StoreManagement.Models;
+using StoreManagement.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,10 +15,62 @@ namespace StoreManagement.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration configuration;
+        private readonly ApplicationDbContext context;
 
-        public AccountController(IConfiguration configuration)
+        public AccountController(IConfiguration configuration , ApplicationDbContext context)
         {
             this.configuration = configuration;
+            this.context = context;
+        }
+
+        [HttpPost("Register")]
+
+        public IActionResult Register(UserDto userDto)
+        {
+            var emailCount = context.Users.Count(u => u.Email == userDto.Email);
+            if (emailCount > 1) {
+                ModelState.AddModelError("Email", "this email is used before");
+                return BadRequest(ModelState);
+            
+            }
+
+            var PassworedHashed = new PasswordHasher<User>();
+            var encryptedPassword = PassworedHashed.HashPassword(new User(), userDto.Password);
+
+            User user = new User()
+            {
+                firstName = userDto.firstName,
+                lastName = userDto.lastName,
+                Email = userDto.Email,
+                Phone = userDto.Phone ?? "",
+                Password = encryptedPassword,
+                Address = userDto.Address,
+                Role = "client",
+                CreatedAt = DateTime.UtcNow,
+
+            };
+
+            context.Users.Add(user);
+            context.SaveChanges();
+            var jwt = CreateJwtToken(user);
+            UserProfileDto userProfileDto = new UserProfileDto()
+            {
+                Id = user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                Role = user.Role,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            var response = new
+            {
+                Token = jwt,
+                user = userProfileDto
+            };
+            return Ok(response);
         }
         private string CreateJwtToken(User user)
         {
