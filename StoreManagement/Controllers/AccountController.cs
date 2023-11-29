@@ -72,6 +72,43 @@ namespace StoreManagement.Controllers
             };
             return Ok(response);
         }
+        [HttpPost("login")]
+        public IActionResult login (string email , string password)
+        {
+            var user = context.Users.FirstOrDefault(u => u.Email == email);
+            if(user == null)
+            {
+                ModelState.AddModelError("Error", "Email or Password are not valid");
+                return BadRequest(ModelState);
+            }
+            var PasswordHasher = new PasswordHasher<User>();
+            var result = PasswordHasher.VerifyHashedPassword(new Models.User() , user.Password, password);
+            if (result == PasswordVerificationResult.Failed) {
+                ModelState.AddModelError("Password", "Wrong Password");
+                return BadRequest(ModelState);
+            
+            }
+
+            var Jwt = CreateJwtToken(user);
+            UserProfileDto userProfileDto = new UserProfileDto()
+            {
+                Id = user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                Role = user.Role,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            var response = new
+            {
+                Token = Jwt,
+                user = userProfileDto
+            };
+            return Ok(response);
+        }
         private string CreateJwtToken(User user)
         {
             List<Claim> claims = new List<Claim>()
