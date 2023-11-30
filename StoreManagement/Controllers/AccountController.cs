@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +22,13 @@ namespace StoreManagement.Controllers
         {
             this.configuration = configuration;
             this.context = context;
+        }
+
+        [Authorize]
+        [HttpGet("AuthorizeAuthenticatedusers")]
+        public IActionResult GetAuthorizeAuthenticatedusers()
+        {
+            return Ok("You are Authorize");
         }
 
         [HttpPost("Register")]
