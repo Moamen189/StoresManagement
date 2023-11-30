@@ -31,6 +31,21 @@ namespace StoreManagement.Controllers
             return Ok("You are Authorize");
         }
 
+
+        [Authorize (Roles ="admin")]
+        [HttpGet("AuthorizeAuthenticatedAdmins")]
+        public IActionResult AuthorizeAuthenticatedAdmins()
+        {
+            return Ok("You are Authorize");
+        }
+
+        [Authorize (Roles ="admin , seller")]
+        [HttpGet("AuthorizeAuthenticatedAdminAndSellers")]
+        public IActionResult AuthorizeAuthenticatedAdminAndSellers()
+        {
+            return Ok("You are Authorize");
+        }
+
         [HttpPost("Register")]
 
         public IActionResult Register(UserDto userDto)
