@@ -132,6 +132,27 @@ namespace StoreManagement.Controllers
             };
             return Ok(response);
         }
+
+
+        [Authorize]
+        [HttpGet("GetTokenClaim")]
+        public IActionResult GetTokenClaim()
+        {
+
+            var Identity = User.Identity as ClaimsPrincipal;
+            if (Identity != null)
+            {
+                Dictionary<string, string> Claims = new Dictionary<string, string>();
+
+                foreach (Claim claim in Identity.Claims)
+                {
+                    Claims.Add(claim.Type, claim.Value);
+                }
+                return Ok(Claims);
+
+            }
+            return Ok();
+        }
         private string CreateJwtToken(User user)
         {
             List<Claim> claims = new List<Claim>()
