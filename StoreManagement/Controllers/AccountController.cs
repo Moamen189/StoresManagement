@@ -139,7 +139,7 @@ namespace StoreManagement.Controllers
         public IActionResult GetTokenClaim()
         {
 
-            var Identity = User.Identity as ClaimsPrincipal;
+            var Identity = User.Identity as ClaimsIdentity;
             if (Identity != null)
             {
                 Dictionary<string, string> Claims = new Dictionary<string, string>();
