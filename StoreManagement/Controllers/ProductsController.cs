@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Models;
 using StoreManagement.Services;
@@ -158,7 +159,7 @@ namespace StoreManagement.Controllers
         
         
         }
-
+        [Authorize (Roles ="admin")]
         [HttpPost]
 
         public IActionResult CreateProduct([FromForm]ProductDto productDto)
@@ -200,7 +201,7 @@ namespace StoreManagement.Controllers
             context.SaveChanges();
             return Ok(product);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
 
         public IActionResult UpdateProduct(int id,[FromForm]ProductDto productDto) {
@@ -240,6 +241,7 @@ namespace StoreManagement.Controllers
             context.SaveChanges();
             return Ok(Product);
         }
+        [Authorize(Roles = "admin")]
 
 
         [HttpDelete("{id}")]
