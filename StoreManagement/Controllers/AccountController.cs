@@ -298,6 +298,7 @@ namespace StoreManagement.Controllers
 
         private int GetUserId()
         {
+            int id;
             var Identity = User.Identity as ClaimsIdentity;
             if (Identity == null)
             {
@@ -311,13 +312,12 @@ namespace StoreManagement.Controllers
                 return -1;
 
             }
-            int id;
 
             try
             {
                 id = int.Parse(claim.Value);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return -1;
             }
