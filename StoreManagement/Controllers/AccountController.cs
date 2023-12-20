@@ -197,6 +197,52 @@ namespace StoreManagement.Controllers
 
            
         }
+
+        [Authorize]
+        [HttpGet("Profile")]
+        public IActionResult GetProfile()
+        {
+            var Identity = User.Identity as ClaimsIdentity;
+            if (Identity == null)
+            {
+                return Unauthorized();
+            }
+            var claim = Identity.Claims.FirstOrDefault(c => c.Type.ToLower() == "id");
+
+            if (claim == null)
+            {
+                return Unauthorized();
+            }
+            int id;
+
+            try
+            {
+                id = int.Parse(claim.Value);
+            }catch (Exception ex)
+            {
+                return Unauthorized();
+            }
+
+            var user = context.Users.Find(id);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            UserProfileDto userProfileDto = new UserProfileDto()
+            {
+                Id = user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                Role = user.Role,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            return Ok(userProfileDto);
+        }
         [Authorize]
         [HttpGet("GetTokenClaim")]
         public IActionResult GetTokenClaim()
