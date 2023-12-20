@@ -133,6 +133,44 @@ namespace StoreManagement.Controllers
             return Ok(response);
         }
 
+        [HttpPost("ForgetPassword")]
+
+        public IActionResult ForgetPassword(string email)
+        {
+            var Useremail = context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (Useremail == null)
+            {
+                return NotFound();
+            }
+
+            var oldPassword = context.PasswordResets.FirstOrDefault(u => u.Email == email);
+            if (oldPassword != null) {
+                context.Remove(oldPassword); 
+            
+            }
+
+            string token = Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString();
+
+            var PasswordReset = new PasswordReset()
+            {
+                Email = email,
+                Token = token,
+                CreatedAt = DateTime.Now
+            };
+            context.PasswordResets.Add(PasswordReset);
+            context.SaveChanges();
+
+            var EmailSubject = "Password Reset";
+
+            var userName = Useremail.firstName + " " + Useremail.lastName;
+
+            var emailMessage = "Dear : " + userName + "\n" +
+                "We Recevied your Passwored Reset Request \n" +
+                "Please copy this Token and Paste this in the Password Reset Form: " + token;
+            return Ok(emailMessage);
+        }
+
 
         [Authorize]
         [HttpGet("GetTokenClaim")]
