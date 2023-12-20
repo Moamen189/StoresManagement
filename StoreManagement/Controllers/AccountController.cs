@@ -171,7 +171,32 @@ namespace StoreManagement.Controllers
             return Ok(emailMessage);
         }
 
+        [HttpPost("ResetPassword")]
+        public IActionResult ResetPassword(string token, string Password)
+        {
+            var PasswordReset = context.PasswordResets.FirstOrDefault(r => r.Token == token);
+            if (PasswordReset == null)
+            {
+                ModelState.AddModelError("Token", "Worng or Expired Token");
+                return BadRequest(ModelState);
+            }
 
+            var user = context.Users.FirstOrDefault(e => e.Email == PasswordReset.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "Worng or Expired Email");
+                return BadRequest(ModelState);
+            }
+            var PassworedHasher = new PasswordHasher<User>();
+            var encryptedPassword = PassworedHasher.HashPassword(new User(), Password);
+            user.Password = encryptedPassword;
+
+            context.PasswordResets.Remove(PasswordReset);
+            context.SaveChanges();
+            return Ok();
+
+           
+        }
         [Authorize]
         [HttpGet("GetTokenClaim")]
         public IActionResult GetTokenClaim()
