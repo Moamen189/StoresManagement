@@ -202,26 +202,7 @@ namespace StoreManagement.Controllers
         [HttpGet("Profile")]
         public IActionResult GetProfile()
         {
-            var Identity = User.Identity as ClaimsIdentity;
-            if (Identity == null)
-            {
-                return Unauthorized();
-            }
-            var claim = Identity.Claims.FirstOrDefault(c => c.Type.ToLower() == "id");
-
-            if (claim == null)
-            {
-                return Unauthorized();
-            }
-            int id;
-
-            try
-            {
-                id = int.Parse(claim.Value);
-            }catch (Exception ex)
-            {
-                return Unauthorized();
-            }
+            int id = GetUserId();
 
             var user = context.Users.Find(id);
             if (user == null)
@@ -244,6 +225,38 @@ namespace StoreManagement.Controllers
             return Ok(userProfileDto);
         }
         [Authorize]
+        [HttpPut("UpdateProfile")]
+
+        public IActionResult UpdateProfile(UserProfileUpdate userProfileUpdate) { 
+            int id = GetUserId();
+
+            var user = context.Users.Find(id);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            user.firstName = userProfileUpdate.firstName;
+            user.lastName = userProfileUpdate.lastName;
+            user.Email = userProfileUpdate.Email;
+            user.Phone = userProfileUpdate.Phone ?? "";
+            user.Address = userProfileUpdate.Address;
+
+            context.SaveChanges();
+            UserProfileDto userProfileDto = new UserProfileDto()
+            {
+                Id = user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Address = user.Address,
+                Role = user.Role,
+                CreatedAt = DateTime.UtcNow,
+            };
+            return Ok(userProfileDto);
+        }
+
+        [Authorize]
         [HttpGet("GetTokenClaim")]
         public IActionResult GetTokenClaim()
         {
@@ -261,6 +274,34 @@ namespace StoreManagement.Controllers
 
             }
             return Ok();
+        }
+
+        private int GetUserId()
+        {
+            var Identity = User.Identity as ClaimsIdentity;
+            if (Identity == null)
+            {
+                return -1;
+
+            }
+            var claim = Identity.Claims.FirstOrDefault(c => c.Type.ToLower() == "id");
+
+            if (claim == null)
+            {
+                return -1;
+
+            }
+            int id;
+
+            try
+            {
+                id = int.Parse(claim.Value);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+            return id;
         }
         private string CreateJwtToken(User user)
         {
