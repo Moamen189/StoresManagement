@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StoreManagement.Models;
 using StoreManagement.Services;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -255,7 +256,26 @@ namespace StoreManagement.Controllers
             };
             return Ok(userProfileDto);
         }
+        [Authorize]
+        [HttpPut("UpdatePassword")]
 
+        public IActionResult UpdatePassword([Required , MinLength(8) , MaxLength(100)]string password)
+        {
+            int id = GetUserId();
+
+            var user = context.Users.Find(id);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var PassworedHasher = new PasswordHasher<User>();
+            var encryptedPassword = PassworedHasher.HashPassword(new Models.User(), password);
+            user.Password = encryptedPassword;
+            context.SaveChanges();
+
+            return Ok();
+        }
         [Authorize]
         [HttpGet("GetTokenClaim")]
         public IActionResult GetTokenClaim()
