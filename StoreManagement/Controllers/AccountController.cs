@@ -203,7 +203,7 @@ namespace StoreManagement.Controllers
         [HttpGet("Profile")]
         public IActionResult GetProfile()
         {
-            int id = GetUserId();
+            int id = JwtReader.getUserId(User);
 
             var user = context.Users.Find(id);
             if (user == null)
@@ -228,8 +228,8 @@ namespace StoreManagement.Controllers
         [Authorize]
         [HttpPut("UpdateProfile")]
 
-        public IActionResult UpdateProfile(UserProfileUpdate userProfileUpdate) { 
-            int id = GetUserId();
+        public IActionResult UpdateProfile(UserProfileUpdate userProfileUpdate) {
+            int id = JwtReader.getUserId(User);
 
             var user = context.Users.Find(id);
             if (user == null)
@@ -261,7 +261,7 @@ namespace StoreManagement.Controllers
 
         public IActionResult UpdatePassword([Required , MinLength(8) , MaxLength(100)]string password)
         {
-            int id = GetUserId();
+            int id = JwtReader.getUserId(User);
 
             var user = context.Users.Find(id);
             if (user == null)
@@ -296,33 +296,7 @@ namespace StoreManagement.Controllers
             return Ok();
         }
 
-        private int GetUserId()
-        {
-            int id;
-            var Identity = User.Identity as ClaimsIdentity;
-            if (Identity == null)
-            {
-                return -1;
 
-            }
-            var claim = Identity.Claims.FirstOrDefault(c => c.Type.ToLower() == "id");
-
-            if (claim == null)
-            {
-                return -1;
-
-            }
-
-            try
-            {
-                id = int.Parse(claim.Value);
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-            return id;
-        }
         private string CreateJwtToken(User user)
         {
             List<Claim> claims = new List<Claim>()
