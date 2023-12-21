@@ -23,7 +23,25 @@ namespace StoreManagement.Controllers
             cartDto.SubTotal = 0;
             cartDto.ShippingFee = OrderHelper.ShippingFee;
             var ProductDictionary = OrderHelper.GetProductDictionary(ProductIdentifiers);
-            return Ok(ProductDictionary);
+
+
+            foreach(var pair in ProductDictionary)
+            {
+                int productId = pair.Key;
+                var Product = context.Products.Find(productId);
+                if(Product == null)
+                {
+                    continue;
+                }
+                var cartItemDto = new CartItemDto();
+                cartItemDto.product = Product;
+                cartItemDto.Quantity = pair.Value;
+                cartDto.CartItems.Add(cartItemDto);
+                cartDto.SubTotal +=Product.Price * pair.Value;
+                cartDto.TotalPrice = cartDto.SubTotal + cartDto.ShippingFee;
+
+            }
+            return Ok(cartDto);
         
         }
     }
