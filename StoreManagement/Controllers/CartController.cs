@@ -15,6 +15,12 @@ namespace StoreManagement.Controllers
         {
             this.context = context;
         }
+
+        [HttpGet("PaymentMethods")]
+        public IActionResult GetPaymentMethods()
+        {
+            return Ok(OrderHelper.PaymentMethods);
+        }
         [HttpGet]
         public IActionResult GetCart(string ProductIdentifiers) {
             CartDto cartDto = new CartDto();
