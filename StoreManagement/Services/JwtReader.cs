@@ -41,7 +41,7 @@ namespace StoreManagement.Services
                 return "";
             }
 
-            var role = Identity.Claims.FirstOrDefault(x => x.Type.ToLower() == "role");
+            var role = Identity.Claims.FirstOrDefault(x => x.Type.Contains("role"));
             if (role == null)
             {
                 return "";
