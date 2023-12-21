@@ -32,5 +32,22 @@ namespace StoreManagement.Services
             }
             return id;
         }
+
+        public static string getUserRole(ClaimsPrincipal user)
+        {
+            var Identity = user.Identity as ClaimsIdentity;
+            if (Identity == null)
+            {
+                return "";
+            }
+
+            var role = Identity.Claims.FirstOrDefault(x => x.Type.ToLower() == "role");
+            if (role == null)
+            {
+                return "";
+            }
+
+            return role.Value;
+        }
     }
 }
