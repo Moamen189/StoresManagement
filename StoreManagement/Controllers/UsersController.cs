@@ -58,6 +58,29 @@ namespace StoreManagement.Controllers
             };
         return Ok(response);
         }
+
+        [HttpGet("{id}")]
+
+        public IActionResult GetUser(int id)
+        {
+            var user = context.Users.Find(id);
+
+            if(user == null)
+            {
+                return BadRequest();
+            }
+            var userProfiles = new UserProfileDto()
+            {
+                Id = user.Id,
+                firstName = user.firstName,
+                lastName = user.lastName,
+                Email = user.Email,
+                Address = user.Address,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt
+            };
+            return Ok(userProfiles);
+        }
     }
 }
  
