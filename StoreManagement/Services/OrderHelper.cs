@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Services
+﻿using StoreManagement.Models;
+
+namespace StoreManagement.Services
 {
     public class OrderHelper
     {
@@ -23,6 +25,7 @@
         };
         public static Dictionary<int, int> GetProductDictionary(string ProductIdentifier)
         {
+
             var Productdictionary = new Dictionary<int, int>();
             if(ProductIdentifier.Length > 0) {
                 string[] productArray = ProductIdentifier.Split('-');
