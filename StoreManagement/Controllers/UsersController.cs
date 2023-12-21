@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using StoreManagement.Models;
 using StoreManagement.Services;
 
@@ -19,8 +20,19 @@ namespace StoreManagement.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUsers() {
-         var users = context.Users.OrderByDescending(u => u.Id).ToList();
+        public IActionResult GetUsers(int? page) {
+            if(page == null || page <1) {
+                page = 1;
+            }
+
+            int pageSize  = 5 ;
+            
+            int totalPages = 0;
+
+            decimal PageCount = context.Users.Count();
+
+            totalPages = (int)Math.Ceiling(PageCount / pageSize);
+         var users = context.Users.Skip((int)(page - 1) * pageSize ).Take(pageSize).OrderByDescending(u => u.Id).ToList();
          List<UserProfileDto> userProfileDto = new List<UserProfileDto>();
         foreach (var user in users)
             {
@@ -36,7 +48,15 @@ namespace StoreManagement.Controllers
                 };
                 userProfileDto.Add(userProfiles);
             }
-        return Ok(userProfileDto);
+            var response = new
+            {
+                users = userProfileDto,
+                totalPages = totalPages,
+                Page = page,
+                pageSize = pageSize,
+
+            };
+        return Ok(response);
         }
     }
 }
