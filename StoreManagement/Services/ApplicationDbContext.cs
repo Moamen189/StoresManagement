@@ -15,6 +15,8 @@ namespace StoreManagement.Services
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PasswordReset> PasswordResets { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> PasswordROrderItemsesets { get; set; }
 
     }
 }
