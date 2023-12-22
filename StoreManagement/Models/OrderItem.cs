@@ -12,7 +12,7 @@ namespace StoreManagement.Models
         [Precision(16 , 2)]
         public decimal unitPrice { get; set; }
 
-        public Order Order { get; set; }
+        public Order Order { get; set; } = null!;
         public Product Product { get; set; } = null!;
     }
 }
