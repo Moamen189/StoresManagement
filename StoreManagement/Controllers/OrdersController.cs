@@ -61,6 +61,38 @@ namespace StoreManagement.Controllers
             return Ok(response);
         }
         [Authorize]
+        [HttpGet("{id}")]
+        public IActionResult GetOrder(int id)
+        {
+            var userId = JwtReader.getUserId(User);
+            var role = context.Users.Find(userId)?.Role ?? "";
+
+            Order? order = null;
+
+            if (role == "admin")
+            {
+                 order = context.Orders.Include(c=> c.User).Include(v => v.OrderItems).ThenInclude(c=> c.Product).FirstOrDefault(u => u.Id == id);
+            }
+            else
+            {
+                order = context.Orders.Include(c => c.User).Include(v => v.OrderItems).ThenInclude(c => c.Product).FirstOrDefault(u => u.Id == id && u.UserId == userId);
+
+            }
+
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var item in order.OrderItems)
+            {
+                item.Order = null;
+            }
+            order.User.Password = "";
+
+            return Ok(order);
+        }
+        [Authorize]
         [HttpPost]
         public IActionResult CreateOrder(OrderDto orderDto)
         {
