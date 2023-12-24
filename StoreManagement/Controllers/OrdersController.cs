@@ -75,6 +75,13 @@ namespace StoreManagement.Controllers
 
             context.Orders.Add(order);
             context.SaveChanges();
+            //Fix Recycling Issue
+            foreach(var item in order.OrderItems)
+            {
+                item.Order = null;
+            }
+
+            order.User.Password = "";
             return Ok(order);
 
         }
