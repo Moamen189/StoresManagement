@@ -19,7 +19,7 @@ namespace StoreManagement.Controllers
         }
         [Authorize]
         [HttpGet]
-        public IActionResult GetOrders()
+        public IActionResult GetOrders(int? page)
         {
             int userId = JwtReader.getUserId(User);
             var role = context.Users.Find(userId)?.Role ?? "";
@@ -31,6 +31,17 @@ namespace StoreManagement.Controllers
 
             query = query.OrderByDescending(x => x.Id);
 
+            if(page == null || page < 1)
+            {
+                page = 1;
+            }
+
+            int PageSize = 5;
+            int totalPages = 0;
+            decimal count = query.Count();
+            totalPages = (int)Math.Ceiling(count / PageSize);
+
+            query = query.Skip((int)(page -1) * PageSize).Take(PageSize);
             var orders = query.ToList();
             foreach (var order in orders)
             {
@@ -41,7 +52,13 @@ namespace StoreManagement.Controllers
                 }
                 order.User.Password = "";
             }
-            return Ok(orders);
+            var response = new
+            {
+                Page = page,
+                TotalPages = totalPages,
+                Orders = orders,
+            };
+            return Ok(response);
         }
         [Authorize]
         [HttpPost]
