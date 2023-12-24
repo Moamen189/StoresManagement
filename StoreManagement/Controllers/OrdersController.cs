@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StoreManagement.Models;
 using StoreManagement.Services;
 
@@ -16,7 +17,32 @@ namespace StoreManagement.Controllers
         {
             this.context = context;
         }
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetOrders()
+        {
+            int userId = JwtReader.getUserId(User);
+            var role = context.Users.Find(userId)?.Role ?? "";
+            IQueryable<Order> query = context.Orders.Include(o => o.User).Include(o => o.OrderItems).ThenInclude(o => o.Product);
+            if (role != "Admin")
+            {
+                query = query.Where(o => o.UserId == userId);
+            }
 
+            query = query.OrderByDescending(x => x.Id);
+
+            var orders = query.ToList();
+            foreach (var order in orders)
+            {
+                foreach(var item in order.OrderItems) {
+
+                    item.Order = null;
+                
+                }
+                order.User.Password = "";
+            }
+            return Ok(orders);
+        }
         [Authorize]
         [HttpPost]
         public IActionResult CreateOrder(OrderDto orderDto)
