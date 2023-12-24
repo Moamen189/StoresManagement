@@ -202,5 +202,22 @@ namespace StoreManagement.Controllers
 
 
         }
+
+
+        [Authorize(Roles ="admin")]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteOrder(int id) {
+            var order = context.Orders.Find(id);
+            if (order == null)
+            {
+                return NotFound();
+
+            }
+            context.Orders.Remove(order);
+            context.SaveChanges();
+            return Ok();
+            
+        
+        }
     }
 }
