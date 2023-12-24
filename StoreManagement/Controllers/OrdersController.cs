@@ -160,5 +160,47 @@ namespace StoreManagement.Controllers
             return Ok(order);
 
         }
+
+        [Authorize(Roles ="admin")]
+        [HttpPut("{id}")]
+
+        public IActionResult UpdateOrder(int id , string? paymentStatus , string? orderStatus)
+        {
+            if(orderStatus == null && paymentStatus == null)
+            {
+                ModelState.AddModelError("Update Order ", "there is nothig to update");
+                return BadRequest(ModelState);
+            }
+
+            if (paymentStatus != null && !OrderHelper.PaymentStatuses.Contains(paymentStatus))
+            {
+                ModelState.AddModelError("Payment Status", "Payment Status is not valid");
+                return BadRequest(ModelState);
+            }
+
+
+            if (orderStatus != null && !OrderHelper.PaymentStatuses.Contains(orderStatus))
+            {
+                ModelState.AddModelError("Order Status", "Order Status is not valid");
+                return BadRequest(ModelState);
+            }
+
+            var order = context.Orders.Find(id);
+            if (paymentStatus != null)
+            {
+                order.PaymentStatus = paymentStatus;
+            }
+
+            if (orderStatus != null)
+            {
+                order.OrderStatus = orderStatus;
+            }
+
+            context.SaveChanges();
+
+            return Ok(order);
+
+
+        }
     }
 }
