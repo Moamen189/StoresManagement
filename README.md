@@ -1,8 +1,8 @@
-# Store Management Backend Application with ASP.NET Web API
+# Store Management Backend ASP.NET Web API
 
 ## Overview
 
-This project is a comprehensive guide on building a secure and professional backend application for E-Commerce using ASP.NET Web API and C#. It covers a wide range of topics, from setting up the development environment to implementing advanced features like authentication, authorization, image uploads, and more.
+ a comprehensive guide on building a secure and professional backend application for E-Commerce using ASP.NET Web API and C#. It covers a wide range of topics, from setting up the development environment to implementing advanced features like authentication, authorization, image uploads, and more.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ Before you begin, make sure you have the following tools installed:
 
 ## Key Features
 
-- **ASP.NET Web API**: Learn to create a robust API for your E-Commerce application.
+- **ASP.NET Web API**: create a robust API for  E-Commerce application.
 - **SQL Server Integration**: Connect seamlessly to SQL Server using Visual Studio 2022 without the need for SSMS.
 - **API Controllers**: Understand and implement API controllers to handle various endpoints.
 - **Middleware and Filters**: Create and use middlewares and filters for enhanced functionality.
@@ -22,17 +22,15 @@ Before you begin, make sure you have the following tools installed:
 - **Authentication and Authorization**: Implement secure user authentication, authorization, and role-based access using Json Web Tokens (JWT).
 - **Database Operations**: Perform CRUD operations on the database using Entity Framework and other frameworks.
 - **Advanced Functionality**: Implement pagination, search, sort functionalities, image uploads, and more.
-- **Dapper for CRUD Operations**: Learn to perform CRUD operations using Dapper.
+- **Dapper for CRUD Operations**: perform CRUD operations using Dapper.
 
 ## Features Objectives
 
-By following this course, you will:
-
 - Build a complete Web API using ASP.NET and C# for E-Commerce applications.
-- Understand the architecture of ASP.NET Web API applications.
+-  architecture of ASP.NET Web API applications.
 - Work with domain models and Data Transfer Object (DTO) models.
 - Utilize built-in data validation and implement custom validation.
-- Grasp the concept of dependency injection and service container.
+- Grasp the dependency injection and service container.
 - Read and write data in SQL Server using Entity Framework and other frameworks.
 - Add and use Entity Framework to create database tables and perform CRUD operations.
 - Implement pagination, search, and sort functionalities.
