@@ -1,0 +1,29 @@
+services:
+  webapp:
+    build: .
+    ports:
+      - "1080:80"
+    networks:
+      - net1
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings:Application=Server=sqlserver;Database=StoreManagement;User Id=sa;Password=@abc123@;Trust Server Certificate=true
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      - net1
+    hostname: sqlserver
+    volumes:
+      - sqldata:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=@abc123@
+
+#networks 
+networks:
+  net1:
+
+#volums
+volumes:
+  sqldata:

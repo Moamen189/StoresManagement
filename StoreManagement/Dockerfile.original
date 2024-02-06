@@ -1,0 +1,14 @@
+#First Stage
+From mcr.microsoft.com/dotnet/sdk:7.0 As build
+WORKDIR /srcc
+COPY *_csproj .
+#RUN dotnet restore
+COPY . .
+Run dotnet publish -c release -o output
+
+#Final Stage 
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /appp
+COPY --from=build /srcc/output .
+
+ENTRYPOINT ["dotnet" , "StoreManagement.dll"]
