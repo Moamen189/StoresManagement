@@ -1,4 +1,4 @@
-# Store Management Backend In ASP.NET Web API
+# Stores Management Backend In ASP.NET Web API
 
 ## Overview
 
