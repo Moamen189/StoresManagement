@@ -2,7 +2,7 @@
 
 ## Overview
 
- A comprehensive guide on building a secure and professional backend application for E-Commerce using ASP.NET Web API and C#. It covers a wide range of topics, from setting up the development environment to implementing advanced features like authentication, authorization, image uploads, and more.
+ A comprehensive guide on building a secure and professional backend application for E-Commerce using ASP.NET Web API and C#. It covers a wide range of features, from setting up the development environment to implementing advanced features like authentication, authorization, image uploads, and contrinzation.
 
 ## Prerequisites
 
